@@ -1,5 +1,6 @@
 ﻿using D_One.Core.DofusBehavior.Cryptography;
 using D_One.Core.DofusBehavior.Map;
+using Dtwo.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace D_One.Core.DofusBehavior.Map.PathFinding
             m_cells = m_mapManager.MapData.Cells;
         }
 
-        public List<Cell> GetPath(Cell cellStart, Cell cellTarget, List<Cell> impasibles, bool stopInFront, byte distanceFront, bool force = false)
+        public List<Cell>? GetPath(Cell cellStart, Cell cellTarget, List<Cell> impasibles, bool stopInFront, byte distanceFront, bool force = false)
         {
             if (cellStart == null || cellTarget == null)
             {
-                Console.WriteLine("CELLSTART = NULL || CELLTARGET = NULL");
+                LogManager.LogError($"{nameof(Pathfinder)}.{GetPath}", "CellStart or CellTarget is null");
                 return null;
             }
 
@@ -72,7 +73,7 @@ namespace D_One.Core.DofusBehavior.Map.PathFinding
                         {
                             if (force && cellTarget.IsInteractive && !cellTarget.CellData.InteractiveMapObject.Model.Recoltable && GetNeighbors(cellTarget).Contains(neigbor) && neigbor.IsWalkable)
                             {
-                                Console.WriteLine("__ PATH CODE 1");
+                                // Code 1
                             }
                             else
                             {
@@ -114,7 +115,7 @@ namespace D_One.Core.DofusBehavior.Map.PathFinding
                 }
             }
 
-            Console.WriteLine("RETURN NULL");
+            LogManager.LogError($"{nameof(Pathfinder)}.{GetPath}", "Return null path");
             return null;
         }
 

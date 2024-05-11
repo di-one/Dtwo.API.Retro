@@ -8,8 +8,8 @@ namespace D_One.Core.Models
 {
     public class Friend
     {
-        public string NickName { get; set; }
-        public string CharacterName { get; set; }
+        public string? NickName { get; set; }
+        public string? CharacterName { get; set; }
         public bool Connected { get; set; }
         public int Level { get; set; }
     }

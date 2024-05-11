@@ -8,8 +8,8 @@ namespace Dtwo.API.Retro.Data
         public int Height { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public string Data { get; set; }
-        public string Teleports { get; set; }
+        public string? Data { get; set; }
+        public string? Teleports { get; set; }
         public int SubAreaId{ get; set; }
 
         public SubArea GetSubArea => Database.GetSubAreaAsync(SubAreaId).Result;

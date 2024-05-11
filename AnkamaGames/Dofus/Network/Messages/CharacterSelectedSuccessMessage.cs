@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using D_One.Core.DofusBehavior.Map.PathFinding;
 using Dtwo.API.Retro.AnkamaGames.Dofus.Network.Types;
 using Dtwo.API.Retro.Network.Messages;
 
@@ -17,7 +18,6 @@ namespace Dtwo.API.Retro.AnkamaGames.Dofus.Network.Messages
         {
             try
             {
-                Console.WriteLine("build " + message);
                 string[] _loc4 = message.Substring(1, message.Length - 1).Split('|');
 
 
@@ -33,7 +33,7 @@ namespace Dtwo.API.Retro.AnkamaGames.Dofus.Network.Messages
             }
             catch (Exception ex)
             {
-                Console.WriteLine(" can parse : " + ex.ToString());
+                LogManager.LogError($"{nameof(CharacterSelectedSuccessMessage)}.{Build}", ex.Message);
                 return false;
             }
 

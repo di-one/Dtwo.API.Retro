@@ -9,11 +9,11 @@ namespace Dtwo.API.Retro.Data
         private static readonly string DATA_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Retro");
         private static readonly string DB_PATH = Path.Combine(DATA_PATH, "db.db3");
 
-        public static async Task<Map> GetMapAsync(int id, string select = null, string where = null) => await GetDataAsync<Map>("maps", id, select, where);
+        public static async Task<Map> GetMapAsync(int id, string? select = null, string? where = null) => await GetDataAsync<Map>("maps", id, select, where);
         public static async Task<Item> GetItemAsync(int id) => await GetDataAsync<Item>("items", id);
         public static async Task<Monster> GetMonsterAsync(int id) => await GetDataAsync<Monster>("monsters", id);
-        public static async Task<Area> GetAreaAsync(int id, string select = null, string where = null) => await GetDataAsync<Area>("area", id, select, where);
-        public static async Task<SubArea> GetSubAreaAsync(int id, string select = null, string where = null) => await GetDataAsync<SubArea>("subArea", id, select, where);
+        public static async Task<Area> GetAreaAsync(int id, string? select = null, string? where = null) => await GetDataAsync<Area>("area", id, select, where);
+        public static async Task<SubArea> GetSubAreaAsync(int id, string? select = null, string? where = null) => await GetDataAsync<SubArea>("subArea", id, select, where);
 
         public static async Task<List<SubArea>> GetSubAreaAsyncByAreaId(int areaId) => await GetDataListAsync<SubArea>("subArea", $"WHERE Area = {areaId}");
 
@@ -21,18 +21,18 @@ namespace Dtwo.API.Retro.Data
 
         public static bool IsLoaded;
 
-        public static List<Job> Jobs { get; private set; } // Load at runtime
+        public static List<Job>? Jobs { get; private set; } // Load at runtime
         //public static List<Spell> Spells { get; private set; } // Load at runtime
-        public static List<InteractiveMapObject> InteractiveMapObjects { get; private set; } // Load at runtime
-        public static List<RaceStatsCalcul> RaceStatsCalculs { get; private set; }
-        public static List<Monster> Monsters { get; private set; }
-        public static Dictionary<int, Craft> Crafts { get; private set; } //id, craft
+        public static List<InteractiveMapObject>? InteractiveMapObjects { get; private set; } // Load at runtime
+        public static List<RaceStatsCalcul>? RaceStatsCalculs { get; private set; }
+        public static List<Monster>? Monsters { get; private set; }
+        public static Dictionary<int, Craft>? Crafts { get; private set; } //id, craft
         //private static List<Item> m_items = new List<Item>();
 
-        public static InteractiveMapObject FindByGfx(this List<InteractiveMapObject> interactiveMapObjects, short gfxId)
+        public static InteractiveMapObject? FindByGfx(this List<InteractiveMapObject> interactiveMapObjects, short gfxId)
             => interactiveMapObjects.Find(x => x.Gfxs.Contains(gfxId));
 
-        public static InteractiveMapObject FindBySkill(this List<InteractiveMapObject> interactiveMapObjects, short skillId)
+        public static InteractiveMapObject? FindBySkill(this List<InteractiveMapObject> interactiveMapObjects, short skillId)
             => interactiveMapObjects.Find(x => x.Skills.Contains(skillId));
 
         public static async Task<bool> LoadAsync()
@@ -47,16 +47,14 @@ namespace Dtwo.API.Retro.Data
             InteractiveMapObjects = null;
             IsLoaded = false;
 
-            //Console.WriteLine("__DATABASE 1 : " + Directory.Exists(Manager.MAPS_PATH).ToString() + " " + Directory.Exists(Manager.ITEMS_PATH).ToString() + " " + File.Exists(Manager.JOBS_PATH).ToString() + " " + File.Exists(Manager.SPELLS_PATH).ToString() + " " + File.Exists(Manager.INTERACTIVES_PATH).ToString());
-
             if (/*Directory.Exists(Manager.MAPS_PATH) &&*/ /*Directory.Exists(Manager.ITEMS_PATH) &&*/ File.Exists(Path.Combine(DATA_PATH, "jobs.json"))
                 && File.Exists(Path.Combine(DATA_PATH, "interactives.json")) && File.Exists(Path.Combine(DATA_PATH, "crafts.json")) /*&& File.Exists(Manager.MONSTERS_PATH)*/)
             {
-                if ((Jobs = Json.JSonSerializer<List<Job>>.DeSerialize(File.ReadAllText(Path.Combine(DATA_PATH, "jobs.json")))) == null) // Load server runtime
+                if ((Jobs = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Job>>(File.ReadAllText(Path.Combine(DATA_PATH, "jobs.json")))) == null) // Load server runtime
                     return false;
 
-                List<Craft> crafts = null;
-                if ((crafts = Json.JSonSerializer<List<Craft>>.DeSerialize(File.ReadAllText(Path.Combine(DATA_PATH, "jobs.json")))) == null) // Load server runtime
+                List<Craft>? crafts = null;
+                if ((crafts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Craft>>(File.ReadAllText(Path.Combine(DATA_PATH, "jobs.json")))) == null) // Load server runtime
                     return false;
 
                 //if ((Monsters = JsonConvert.DeserializeObject<List<Monster>>(File.ReadAllText(Manager.MONSTERS_PATH))) == null) // Load server runtime
@@ -70,8 +68,8 @@ namespace Dtwo.API.Retro.Data
 
                 //Console.WriteLine("DATABASE 2");
 
-                List<InteractiveMapObjectData> interactiveMapObjectsData; // Load server runtime
-                if ((interactiveMapObjectsData = Json.JSonSerializer<List<InteractiveMapObjectData>>.DeSerialize(File.ReadAllText(Path.Combine(DATA_PATH, "interactives.json")))) == null)
+                List<InteractiveMapObjectData>? interactiveMapObjectsData; // Load server runtime
+                if ((interactiveMapObjectsData = Newtonsoft.Json.JsonConvert.DeserializeObject<List<InteractiveMapObjectData>>(File.ReadAllText(Path.Combine(DATA_PATH, "interactives.json")))) == null)
                     return false;
 
                 //Console.WriteLine("DATABASE 3");
@@ -149,7 +147,7 @@ namespace Dtwo.API.Retro.Data
             }
         }
 
-        public static async Task<T> GetDataAsyncCustom<T>(string select, string table, Dictionary<string, string> whereNameValues) where T : DatabaseItem, new()
+        public static async Task<T?> GetDataAsyncCustom<T>(string select, string table, Dictionary<string, string> whereNameValues) where T : DatabaseItem, new()
         {
             string cs = $"URI=file:{DB_PATH}";
             string where = "WHERE ";
@@ -168,7 +166,7 @@ namespace Dtwo.API.Retro.Data
                 connection.ConnectionString = cs;
                 connection.Open();
 
-                T item = null;
+                T? item = null;
                 try
                 {
                     using (SQLiteCommand cmd = CreateSelectWhereCommand(table, where, connection, select))
@@ -190,15 +188,13 @@ namespace Dtwo.API.Retro.Data
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("____ERROR SQLITE " + ex.Message);
+                    LogManager.LogError($"{nameof(Database)}.{nameof(GetDataAsyncCustom)}", ex.Message);
+                    return null;
                 }
             }
-
-
-            return null;
         }
 
-        public static async Task<T> GetDataAsync<T>(string table, int id, string select = null, string where = null) where T : DatabaseItem, new()
+        public static async Task<T?> GetDataAsync<T>(string table, int id, string? select = null, string? where = null) where T : DatabaseItem, new()
         {
             string cs = $"URI=file:{DB_PATH}";
             where = where ?? $"WHERE Id = '{id}'";
@@ -208,7 +204,7 @@ namespace Dtwo.API.Retro.Data
                 connection.ConnectionString = cs;
                 connection.Open();
 
-                T item = null;
+                T? item = null;
                 try
                 {
                     using (SQLiteCommand cmd = CreateSelectWhereCommand(table, where, connection, select))
@@ -230,7 +226,7 @@ namespace Dtwo.API.Retro.Data
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("____ERROR SQLITE " + ex.Message);
+                    LogManager.LogError($"{nameof(Database)}.{nameof(GetDataAsync)}", ex.Message);
                 }
             }
 
@@ -238,7 +234,7 @@ namespace Dtwo.API.Retro.Data
             return null;
         }
 
-        public static async Task<List<T>> GetDataListAsync<T>(string table, string otherQuery = null) where T : DatabaseItem, new()
+        public static async Task<List<T>> GetDataListAsync<T>(string table, string? otherQuery = null) where T : DatabaseItem, new()
         {
             //if (m_connexion == null)
             //    await Connection();
@@ -291,7 +287,7 @@ namespace Dtwo.API.Retro.Data
 
                         //Core.Console.WriteLine("UPDATE DATA ASYNC 3");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //Core.Console.WriteLine(ex.Message + " " + ex.StackTrace);
                     }
@@ -302,7 +298,7 @@ namespace Dtwo.API.Retro.Data
             //Core.Console.WriteLine("UPDATE DATA ASYNC 5");
         }
 
-        private static SQLiteCommand CreateSelectWhereCommand(string table, string where, SQLiteConnection connection, string select = null, string otherQuery = null)
+        private static SQLiteCommand CreateSelectWhereCommand(string table, string where, SQLiteConnection connection, string? select = null, string? otherQuery = null)
         {
             string query = "";
             if (select != null)
@@ -323,7 +319,7 @@ namespace Dtwo.API.Retro.Data
             return new SQLiteCommand(query, connection);
         }
 
-        private static SQLiteCommand CreateAllSelectCommand(string table, SQLiteConnection connection, string otherQuery = null)
+        private static SQLiteCommand CreateAllSelectCommand(string table, SQLiteConnection connection, string? otherQuery = null)
         {
             string query = $"SELECT * FROM {table} ";
             if (otherQuery == null) query += "WHERE 1";

@@ -8,7 +8,7 @@ namespace Dtwo.API.Retro.Network.Messages
 {
     public class RetroMessageParser : MessageParser
     {
-        private byte[] m_buffer;
+        private byte[]? m_buffer;
 
         public override void OnGetPacket(byte[] data, int length)
         {
@@ -22,8 +22,6 @@ namespace Dtwo.API.Retro.Network.Messages
                     try
                     {
                         var packet = packets[i];
-                        Console.WriteLine(packet);
-
 
                         string identifier = null;
                         RetroMessage? message = RetroMessagesLoader.Instance.GetMessageStartWidth(packet, out identifier);

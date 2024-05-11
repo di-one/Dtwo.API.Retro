@@ -28,7 +28,6 @@ namespace Dtwo.API.Retro.AnkamaGames.Dofus.Network.Types
                 PartyMemberInformations infos = new PartyMemberInformations();
                 infos.id = int.Parse(values[0]);
                 infos.name = values[1];
-                Console.WriteLine("____" + infos.name);
                 // 2 = skin
                 // 3,4,5,6 = color
                 var lifes = values[7].Split(',');
@@ -43,7 +42,8 @@ namespace Dtwo.API.Retro.AnkamaGames.Dofus.Network.Types
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+
+                LogManager.LogError($"{nameof(PartyMemberInformations)}.{Build}", ex.ToString());
                 return null;
             }
         }

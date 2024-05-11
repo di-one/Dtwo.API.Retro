@@ -4,17 +4,17 @@ namespace Dtwo.API.Retro.Data
 {
     public class Monster : DatabaseItem
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int GfxId { get; set; }
-        public string Grades { get; set; }
-        public string Stats { get; set; }
-        public string Spells { get; set; }
-        public string Pdvs { get; set; }
-        public string Points { get; set; }
-        public string Inits { get; set; }
-        public string MinKamas { get; set; }
+        public string? Grades { get; set; }
+        public string? Stats { get; set; }
+        public string? Spells { get; set; }
+        public string? Pdvs { get; set; }
+        public string? Points { get; set; }
+        public string? Inits { get; set; }
+        public string? MinKamas { get; set; }
         public int MaxKamas { get; set; }
-        public string Xps { get; set; }
+        public string? Xps { get; set; }
         public int Capturable { get; set; }
 
         public override void Init<T>(DbDataReader resultQuery)

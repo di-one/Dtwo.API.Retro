@@ -1,4 +1,5 @@
 ﻿using D_One.Core.DofusBehavior.Cryptography;
+using Dtwo.API;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,14 +21,13 @@ namespace D_One.Core.DofusBehavior.Map
             else InteractiveMapObjects = new ConcurrentDictionary<int, InteractiveMapObject>();
             if (map == null)
             {
-                Console.WriteLine("__________ MAP == NULL __________");
+                LogManager.LogError(nameof(MapInformations), "Map is null");
             }
             else
             {
                 Map = map;
                 if (map.Data != null)
                     ParseData();
-                else Console.WriteLine("__________ MAP.DATA == NULL __________");
             }
         }
 

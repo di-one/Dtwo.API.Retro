@@ -65,9 +65,6 @@ namespace D_One.Core.DofusBehavior.Map.Entities
 
         public Monster(int id, int dataId, Cell cell, int level)
         {
-            Console.WriteLine("ADD MONSTER_______________________________");
-            Console.WriteLine("Id : " + id);
-            Console.WriteLine("data id : " + dataId);
             Id = id;
             DataId = dataId;
             Cell = cell;
@@ -80,16 +77,11 @@ namespace D_One.Core.DofusBehavior.Map.Entities
         /// </summary>
         public bool GroupContains(int id)
         {
-            Console.WriteLine("CHECK MONSTER ID MAP");
-
             if (LeaderGroup.DataId == id)
                 return true;
 
-            Console.WriteLine("CHECK MONSTER ID MAP : " + LeaderGroup.DataId);
-
             for (int i = 0; i < MonstersInGroup.Count; i++)
             {
-                Console.WriteLine("CHECK MONSTER ID MAP : " + MonstersInGroup[i].DataId);
                 if (MonstersInGroup[i].DataId == id)
                     return true;
             }

@@ -22,9 +22,6 @@ namespace D_One.Core.DofusBehavior.Map.Entities
             Id = id;
             DataId = dataId;
             Cell = cell;
-
-            Console.WriteLine("____ADD NPC ID : " + id);
-            Console.WriteLine("____ADD NPC DATA_ID : " + dataId);
         }
 
         #region Dispose
